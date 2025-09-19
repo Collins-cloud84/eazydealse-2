@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>EasyEarning-e² | Affiliate Marketing Platform</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --main-blue: #142047;
+      --accent-red: #e53935;
+      --soft-blue: #e3e8fa;
+      --card-bg: #fff;
+      --font: 'Poppins', Arial, sans-serif;
+    }
+    body {
+      margin: 0;
+      font-family: var(--font);
+      background: var(--soft-blue);
+      color: var(--main-blue);
+      min-height: 100vh;
+    }
+    h1, h2, h3 { font-weight: 700; color: var(--main-blue); }
+    .centered-container {
+      max-width: 400px; margin: 36px auto; background: var(--card-bg); border-radius: 16px;
+      padding: 24px 14px; box-shadow: 0 4px 24px rgba(20,32,71,0.13); display: flex; flex-direction: column; align-items: center;
+    }
+    .form-card { background: #f6faff; padding: 16px 10px; border-radius: 12px; margin-bottom: 18px; color: var(--main-blue); box-shadow: 0 1px 4px rgba(20,32,71,0.09); width: 100%; }
+    .payment-info { background: #fce4ec; border-left: 5px solid var(--accent-red); padding: 8px 14px; border-radius: 8px; margin: 14px 0; color: var(--accent-red); font-size: 0.97em; }
+    .pay-number { font-weight: bold; font-size: 1em; color: var(--accent-red);}
+    form label { display: block; margin-top: 12px; font-weight: 500; color: var(--main-blue); font-size: 1em;}
+    form input, form select { width: 100%; padding: 8px 10px; margin-top: 6px; border: 2px solid var(--main-blue); border-radius: 8px; font-size: 1em; background: #f8fafc; margin-bottom: 8px; font-family: var(--font);}
+    form input:focus, form select:focus { border-color: var(--accent-red);}
+    .btn-blue { background: linear-gradient(90deg, var(--main-blue) 60%, var(--accent-red) 100%); color: #fff; border: none; padding: 12px 22px; border-radius: 8px; font-size: 1em; font-weight: bold; margin-top: 18px; cursor: pointer;}
+    .btn-blue:hover { background: var(--accent-red); color: var(--main-blue);}
+    .btn-blue-outline { background: #fff; color: var(--main-blue); border: 2px solid var(--main-blue); padding: 8px 18px; border-radius: 7px; font-weight: bold; margin-top: 12px; margin-right: 8px; cursor: pointer; font-size: 0.98em;}
+    .btn-blue-outline:hover { background: var(--main-blue); color: #fff; border-color: var(--accent-red);}
+    .error-msg { color: var(--accent-red); margin-top: 8px; font-weight: 700; font-size: 0.99em;}
+    /* Hamburger Menu */
+    .hamburger {
+      position: fixed; top: 18px; left: 18px; z-index: 101; width: 40px; height: 40px;
+      background: var(--main-blue); border-radius: 8px; display: flex; align-items: center; justify-content: center;
+      cursor: pointer; box-shadow: 0 2px 8px rgba(20,32,71,0.12);
+    }
+    .hamburger span {
+      display: block; width: 24px; height: 3px; background: #fff; margin: 4px 0; border-radius: 2px;
+    }
+    .app-menu { display: none; position: fixed; top: 0; left: 0; width: 210px; height: 100vh; background: var(--main-blue); z-index: 100; box-shadow: 2px 0 16px rgba(20,32,71,0.13); padding-top: 70px; }
+    .app-menu ul { list-style: none; padding: 0; margin: 0;}
+    .app-menu ul li { border-bottom: 1px solid #233168;}
+    .app-menu ul li a { display: block; padding: 16px 26px; color: #fff; text-decoration: none; font-size: 1.08em; font-family: var(--font); font-weight: 500;}
+    .app-menu ul li a:hover { background: var(--accent-red); color: #fff;}
+    .app-menu .logo { font-size: 1.2em; font-weight: bold; color: #fff; margin-bottom: 22px; padding-left: 24px;}
+    .close-menu { position: absolute; top: 18px; right: 18px; font-size: 1.5em; color: #fff; background: none; border: none; cursor: pointer;}
+    .main-content { padding: 18px 5vw; min-height: 100vh; box-sizing: border-box;}
+    .container { background: var(--card-bg); padding: 18px 8px; border-radius: 14px; box-shadow: 0 4px 24px rgba(20,32,71,0.07); max-width: 540px; margin: 0 auto 28px auto; box-sizing: border-box;}
+    .dashboard-row { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 18px;}
+    .dashboard-card { flex: 1 1 130px; background: linear-gradient(135deg, #e3e8fa 60%, #fff 100%); border-radius: 11px; box-shadow: 0 2px 12px rgba(20,32,71,0.09); margin-bottom: 12px; padding: 13px 10px; display: flex; align-items: center; gap: 12px; min-width: 110px;}
+    .dashboard-card .card-icon { font-size: 1.7em; color: var(--accent-red); margin-right: 6px;}
+    .dashboard-card .card-label { color: var(--main-blue); font-size: 1em; font-weight: 500;}
+    .dashboard-card .card-value { color: var(--accent-red); font-size: 1em; font-weight: 700;}
+    .referral-card, .withdrawal-card, .leaderboard-card { background: linear-gradient(90deg, #fce4ec 0%, #e3e8fa 100%); padding: 12px 6px; border-radius: 10px; margin-bottom: 16px; color: var(--main-blue); box-shadow: 0 1px 8px rgba(20,32,71,0.09);}
+    .earn-tabs { display: flex; gap: 8px; margin-bottom: 18px; flex-wrap: wrap;}
+    .earn-tab-content { margin-top: 10px;}
+    #photoGallery, #videoGallery { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-start;}
+    #photoGallery img { width: 120px; height: 85px; object-fit: cover; border-radius: 9px; margin-bottom: 8px; box-shadow: 0 1px 8px rgba(20,32,71,0.12); cursor: pointer; border: 2px solid transparent;}
+    #photoGallery img.liked { border: 2px solid var(--accent-red); box-shadow: 0 2px 10px rgba(229,57,53,0.08);}
+    #videoGallery video { width: 150px; height: 95px; border-radius: 9px; margin-bottom: 8px; box-shadow: 0 1px 8px rgba(20,32,71,0.12); cursor: pointer; border: 2px solid transparent; background: #222;}
+    #videoGallery video.watched { border: 2px solid var(--accent-red); box-shadow: 0 2px 10px rgba(229,57,53,0.08);}
+    table { border-collapse: collapse; width: 100%; font-size: 0.98em;}
+    table thead { background: linear-gradient(90deg, var(--main-blue) 60%, var(--accent-red) 100%); color: #fff;}
+    table th, table td { padding: 8px 4px; text-align: left; border-bottom: 1px solid #ddd; font-family: var(--font);}
+    @media (max-width: 640px) {
+      .centered-container {max-width: 99vw; margin: 10px auto; padding: 8px 2vw;}
+      .form-card {padding: 8px 2vw;}
+      .main-content {padding: 8px 1vw;}
+      .container {max-width: 99vw; padding: 10px 2vw;}
+      .dashboard-row {flex-direction: column; gap: 0;}
+      #photoGallery img, #videoGallery video {width: 98vw; height: 130px;}
+      .app-menu {width: 88vw;}
+      .hamburger {top: 10px; left: 10px;}
+    }
+    @media (max-width:400px){
+      #photoGallery img,#videoGallery video{height:80px;}
+    }
+  </style>
+</head>
+<body>
+  <!-- Registration Page -->
+  <div id="registerPage" class="centered-container">
+    <h1>EasyEarning-e²</h1>
+    <div class="form-card">
+      <form id="registrationForm" autocomplete="on">
+        <label>Username:</label>
+        <input type="text" name="username" autocomplete="username" required>
+        <label>Email:</label>
+        <input type="email" name="email" autocomplete="email" required>
+        <label>Phone Number:</label>
+        <input type="tel" name="phone" autocomplete="tel" required>
+        <label>Password:</label>
+        <input type="password" name="password" autocomplete="new-password" required>
+        <label>Country:</label>
+        <select name="country" required>
+          <option value="">Select Country</option>
+          <option value="Kenya">Kenya</option>
+          <option value="Uganda">Uganda</option>
+        </select>
+        <div class="payment-info">
+          <label>Registration Fee (200 KES):</label>
+          <p>
+            Pay <strong>200 KES</strong> to <span class="pay-number">Mpesa: 0740685187</span>.<br>
+            Payment details will be provided after registration.
+          </p>
+        </div>
+        <button type="submit" class="btn-blue">Register</button>
+      </form>
+      <div id="regError" class="error-msg"></div>
+      <p style="margin-top:14px;">Already registered? <a href="#" onclick="showLogin()" style="color:var(--accent-red);font-weight:700;">Login here</a></p>
+    </div>
+  </div>
+  <!-- Login Page -->
+  <div id="loginPage" class="centered-container" style="display:none;">
+    <h1>EasyEarning-e²</h1>
+    <div class="form-card">
+      <form id="loginForm" autocomplete="on">
+        <label>Username:</label>
+        <input type="text" name="loginUsername" autocomplete="username" required>
+        <label>Password:</label>
+        <input type="password" name="loginPassword" autocomplete="current-password" required>
+        <button type="submit" class="btn-blue">Login</button>
+      </form>
+      <div id="loginError" class="error-msg"></div>
+      <p style="margin-top:14px;">Don't have an account? <a href="#" onclick="showRegister()" style="color:var(--main-blue);font-weight:700;">Register here</a></p>
+    </div>
+  </div>
+  <!-- Hamburger Icon -->
+  <div id="hamburger" class="hamburger" style="display:none;" onclick="toggleMenu()">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+  <!-- Hidden App Menu -->
+  <nav id="appMenu" class="app-menu">
+    <button class="close-menu" onclick="toggleMenu()">&times;</button>
+    <div class="logo">EasyEarning-e²</div>
+    <ul>
+      <li><a href="#" onclick="showSection('dashboard');toggleMenu();">Dashboard</a></li>
+      <li><a href="#" onclick="showSection('earn');toggleMenu();">Earn</a></li>
+      <li><a href="#" onclick="showSection('referral');toggleMenu();">Referral</a></li>
+      <li><a href="#" onclick="showSection('withdrawal');toggleMenu();">Withdrawal</a></li>
+      <li><a href="#" onclick="showSection('leaderboard');toggleMenu();">Leaderboard</a></li>
+      <li><a href="#" onclick="logout();toggleMenu();">Logout</a></li>
+    </ul>
+  </nav>
+  <!-- Main App Sections -->
+  <div id="app" style="display:none;">
+    <div class="main-content" id="mainContent">
+      <!-- Dashboard -->
+      <section id="dashboard">
+        <div class="container">
+          <h2><span style="color:var(--accent-red);margin-right:8px;">&#128202;</span>Dashboard</h2>
+          <div class="dashboard-row">
+            <div class="dashboard-card">
+              <span class="card-icon">&#128176;</span>
+              <div>
+                <div class="card-label">Total Earnings</div>
+                <div class="card-value" id="totalEarnings">0 KES</div>
+              </div>
+            </div>
+            <div class="dashboard-card">
+              <span class="card-icon">&#128101;</span>
+              <div>
+                <div class="card-label">Referral (Lvl 1)</div>
+                <div class="card-value" id="referralEarningsL1">0 KES</div>
+              </div>
+            </div>
+            <div class="dashboard-card">
+              <span class="card-icon">&#128106;</span>
+              <div>
+                <div class="card-label">Referral (Lvl 2)</div>
+                <div class="card-value" id="referralEarningsL2">0 KES</div>
+              </div>
+            </div>
+          </div>
+          <div class="dashboard-row">
+            <div class="dashboard-card">
+              <span class="card-icon">&#128247;</span>
+              <div>
+                <div class="card-label">Photo Likes</div>
+                <div class="card-value" id="likesEarnings">0 KES</div>
+              </div>
+            </div>
+            <div class="dashboard-card">
+              <span class="card-icon">&#127909;</span>
+              <div>
+                <div class="card-label">Video Earnings</div>
+                <div class="card-value" id="videoEarnings">0 KES</div>
+              </div>
+            </div>
+            <div class="dashboard-card">
+              <span class="card-icon">&#127891;</span>
+              <div>
+                <div class="card-label">Trivia Earnings</div>
+                <div class="card-value" id="triviaEarnings">0 KES</div>
+              </div>
+            </div>
+          </div>
+          <div class="dashboard-row">
+            <div class="dashboard-card">
+              <span class="card-icon">&#128273;</span>
+              <div>
+                <div class="card-label">Available Balance</div>
+                <div class="card-value" id="availableBalance">0 KES</div>
+              </div>
+            </div>
+            <div class="dashboard-card">
+              <span class="card-icon">&#128179;</span>
+              <div>
+                <div class="card-label">Withdrawn</div>
+                <div class="card-value" id="withdrawnBalance">0 KES</div>
+              </div>
+            </div>
+          </div>
+          <div class="dashboard-card" style="background:#fff7fa;">
+            <span class="card-icon" style="color:var(--main-blue);">&#128279;</span>
+            <div>
+              <div class="card-label">Your Referral Link</div>
+              <div style="word-break:break-all;font-size:1em;" id="referralLink">[Link]</div>
+            </div>
+          </div>
+          <div style="margin-top:16px;color:var(--main-blue);font-size:1em;">
+            Welcome, <strong id="dashboardUsername"></strong>!
+          </div>
+        </div>
+      </section>
+      <!-- Earn Section -->
+      <section id="earn" style="display:none;">
+        <div class="container">
+          <h2><span style="color:var(--accent-red);margin-right:8px;">&#127942;</span>Earn Money</h2>
+          <div class="earn-tabs">
+            <button onclick="showEarnTab('photos')" class="btn-blue-outline">Like Photos</button>
+            <button onclick="showEarnTab('videos')" class="btn-blue-outline">Watch Videos</button>
+            <button onclick="showEarnTab('trivia')" class="btn-blue-outline">Trivia Questions</button>
+          </div>
+          <div id="earnPhotos" class="earn-tab-content">
+            <h3 style="color:var(--main-blue);">Like Photos (5 KES/photo)</h3>
+            <div id="photoGallery"></div>
+          </div>
+          <div id="earnVideos" class="earn-tab-content" style="display:none;">
+            <h3 style="color:var(--main-blue);">Watch Videos (5 KES/video)</h3>
+            <div id="videoGallery"></div>
+          </div>
+          <div id="earnTrivia" class="earn-tab-content" style="display:none;">
+            <h3 style="color:var(--main-blue);">Trivia Questions (1 KES/correct answer)</h3>
+            <div id="triviaQuestions"></div>
+          </div>
+        </div>
+      </section>
+      <!-- Referral System -->
+      <section id="referral" style="display:none;">
+        <div class="container">
+          <h2><span style="color:var(--accent-red);margin-right:8px;">&#128279;</span>Referral System</h2>
+          <div class="referral-card">
+            <p>Share your referral link to earn:</p>
+            <ul style="margin-bottom:14px;">
+              <li><b>Level 1:</b> 100 KES per direct sign-up</li>
+              <li><b>Level 2:</b> 50 KES per your downline's sign-up</li>
+            </ul>
+            <input type="text" id="userReferralLink" readonly style="width:80%;margin-bottom:8px;">
+            <button onclick="copyReferralLink()" class="btn-blue-outline">Copy Link</button>
+            <p style="margin-top:12px;">Level 1 Referrals: <span id="referralCountL1">0</span> | Earnings: <span id="referralEarningsL1_2">0 KES</span></p>
+            <p>Level 2 Referrals: <span id="referralCountL2">0</span> | Earnings: <span id="referralEarningsL2_2">0 KES</span></p>
+          </div>
+        </div>
+      </section>
+      <!-- Withdrawal System -->
+      <section id="withdrawal" style="display:none;">
+        <div class="container">
+          <h2><span style="color:var(--accent-red);margin-right:8px;">&#128179;</span>Withdraw Earnings</h2>
+          <div class="withdrawal-card">
+            <p>Minimum withdrawal: <strong>150 KES</strong>. Service fee: <strong>10%</strong></p>
+            <form id="withdrawalForm">
+              <label>Amount (KES):</label>
+              <input type="number" name="amount" min="150" required>
+              <label>Phone Number (for payment):</label>
+              <input type="tel" name="withdrawPhone" required>
+              <button type="submit" class="btn-blue">Withdraw</button>
+            </form>
+            <p id="withdrawalMessage"></p>
+          </div>
+        </div>
+      </section>
+      <!-- Leaderboard -->
+      <section id="leaderboard" style="display:none;">
+        <div class="container">
+          <h2><span style="color:var(--accent-red);margin-right:8px;">&#127942;</span>Leaderboard</h2>
+          <div class="leaderboard-card">
+            <table>
+              <thead>
+                <tr>
+                  <th>Rank</th>
+                  <th>Username</th>
+                  <th>Earnings (KES)</th>
+                  <th>Referrals</th>
+                </tr>
+              </thead>
+              <tbody id="leaderboardTable">
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+<script>
+  // Simulated server-side "database" using localStorage
+  function getAccounts() {
+    let data = localStorage.getItem('ee2_accounts');
+    return data ? JSON.parse(data) : [];
+  }
+  function saveAccounts(arr) {
+    localStorage.setItem('ee2_accounts', JSON.stringify(arr));
+  }
+  function getUserProgress(username) {
+    let data = localStorage.getItem('ee2_progress_'+username);
+    return data ? JSON.parse(data) : null;
+  }
+  function saveUserProgress(username, obj) {
+    localStorage.setItem('ee2_progress_'+username, JSON.stringify(obj));
+  }
+
+  let currentUser = null;
+  let userData = null;
+
+  function showRegister() {
+    document.getElementById('registerPage').style.display = 'flex';
+    document.getElementById('loginPage').style.display = 'none';
+    document.getElementById('app').style.display = 'none';
+    document.getElementById('hamburger').style.display = 'none';
+    document.getElementById('appMenu').style.display = 'none';
+    document.getElementById('regError').textContent = '';
+    document.getElementById('loginError').textContent = '';
+  }
+  function showLogin() {
+    document.getElementById('registerPage').style.display = 'none';
+    document.getElementById('loginPage').style.display = 'flex';
+    document.getElementById('app').style.display = 'none';
+    document.getElementById('hamburger').style.display = 'none';
+    document.getElementById('appMenu').style.display = 'none';
+    document.getElementById('regError').textContent = '';
+    document.getElementById('loginError').textContent = '';
+  }
+  function showApp() {
+    document.getElementById('registerPage').style.display = 'none';
+    document.getElementById('loginPage').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    document.getElementById('hamburger').style.display = 'flex';
+    document.getElementById('appMenu').style.display = 'none';
+    showSection('dashboard');
+    showOnlyDashboard();
+    initDashboard();
+  }
+  function showOnlyDashboard() {
+    const sections = document.querySelectorAll('.main-content section');
+    sections.forEach(sec => sec.style.display = 'none');
+    document.getElementById('dashboard').style.display = 'block';
+  }
+  function toggleMenu() {
+    const menu = document.getElementById('appMenu');
+    menu.style.display = (menu.style.display === 'block') ? 'none' : 'block';
+    document.getElementById('mainContent').style.filter = (menu.style.display === 'block') ? 'blur(2px)' : 'none';
+  }
+  function logout() {
+    currentUser = null;
+    userData = null;
+    document.getElementById('mainContent').style.filter = 'none';
+    showLogin();
+  }
+
+  document.getElementById('registrationForm').onsubmit = function(e) {
+    e.preventDefault();
+    let username = this.username.value.trim();
+    let email = this.email.value.trim();
+    let password = this.password.value;
+    let phone = this.phone.value.trim();
+    let country = this.country.value;
+    if (username.length < 3 || password.length < 4) {
+      document.getElementById('regError').textContent = "Username must be at least 3 characters, password at least 4.";
+      return;
+    }
+    let accounts = getAccounts();
+    if (accounts.some(u => u.username === username || u.email === email)) {
+      document.getElementById('regError').textContent = "Username or Email already registered.";
+      return;
+    }
+    accounts.push({ username, email, password, phone, country, deposited: false });
+    saveAccounts(accounts);
+    document.getElementById('regError').textContent = "";
+    showLogin();
+  };
+
+  document.getElementById('loginForm').onsubmit = function(e) {
+    e.preventDefault();
+    let username = this.loginUsername.value.trim();
+    let password = this.loginPassword.value;
+    let accounts = getAccounts();
+    let found = accounts.find(u => u.username === username && u.password === password);
+    if (found) {
+      currentUser = found;
+      userData = getUserProgress(username);
+      if (!userData) {
+        userData = {
+          deposited: false, depositAmount: 0,
+          earnings: 0, referralEarningsL1: 0, referralEarningsL2: 0,
+          photoEarnings: 0, videoEarnings: 0, triviaEarnings: 0,
+          referralsL1: 0, referralsL2: 0, availableBalance: 0, withdrawn: 0,
+          triviaDone: []
+        };
+        saveUserProgress(username, userData);
+      }
+      showApp();
+    } else {
+      document.getElementById('loginError').textContent = "Invalid username or password.";
+    }
+  };
+
+  function showSection(sectionId) {
+    const sections = document.querySelectorAll('.main-content section');
+    sections.forEach(sec => sec.style.display = 'none');
+    document.getElementById(sectionId).style.display = 'block';
+  }
+  function showEarnTab(tab) {
+    document.getElementById('earnPhotos').style.display = 'none';
+    document.getElementById('earnVideos').style.display = 'none';
+    document.getElementById('earnTrivia').style.display = 'none';
+    if (tab === 'photos') document.getElementById('earnPhotos').style.display = 'block';
+    if (tab === 'videos') document.getElementById('earnVideos').style.display = 'block';
+    if (tab === 'trivia') document.getElementById('earnTrivia').style.display = 'block';
+  }
+
+  function initDashboard() {
+    document.getElementById('dashboardUsername').textContent = currentUser.username;
+    let link = window.location.origin + '/?ref=' + currentUser.username;
+    document.getElementById('referralLink').textContent = link;
+    document.getElementById('userReferralLink').value = link;
+    updateEarnings();
+  }
+  function copyReferralLink() {
+    const copyText = document.getElementById("userReferralLink");
+    copyText.select();
+    copyText.setSelectionRange(0, 99999);
+    document.execCommand("copy");
+    alert("Referral link copied!");
+  }
+
+  // Deposit simulation
+  function ensureDeposit() {
+    if (!userData.deposited) {
+      let amt = prompt("Enter deposit amount (minimum 200 KES):");
+      amt = parseInt(amt,10);
+      if (!amt || amt < 200) {
+        alert("Deposit must be at least 200 KES.");
+        return false;
+      }
+      userData.deposited = true;
+      userData.depositAmount = amt;
+      userData.availableBalance += amt;
+      saveUserProgress(currentUser.username, userData);
+      updateEarnings();
+      alert("Deposit successful! You can now earn and withdraw.");
+      return true;
+    }
+    return true;
+  }
+
+  const photos = [
+    {src: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=700&q=80', id: 1},
+    {src: 'https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=700&q=80', id: 2},
+    {src: 'https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?auto=format&fit=crop&w=700&q=80', id: 3}
+  ];
+  function loadPhotos() {
+    const gallery = document.getElementById('photoGallery');
+    gallery.innerHTML = '';
+    photos.forEach(photo => {
+      const img = document.createElement('img');
+      img.src = photo.src;
+      img.alt = 'Photo';
+      img.onclick = function() {
+        if (!userData.deposited) {
+          ensureDeposit();
+          return;
+        }
+        if (!img.classList.contains('liked')) {
+          img.classList.add('liked');
+          userData.photoEarnings += 5;
+          userData.earnings += 5;
+          userData.availableBalance += 5;
+          saveUserProgress(currentUser.username, userData);
+          updateEarnings();
+        }
+      };
+      gallery.appendChild(img);
+    });
+  }
+
+  const videos = [
+    {src: 'https://www.w3schools.com/html/mov_bbb.mp4', id: 1},
+    {src: 'https://www.w3schools.com/html/movie.mp4', id: 2}
+  ];
+  function loadVideos() {
+    const gallery = document.getElementById('videoGallery');
+    gallery.innerHTML = '';
+    videos.forEach(video => {
+      const vid = document.createElement('video');
+      vid.src = video.src;
+      vid.controls = true;
+      vid.poster = "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?auto=format&fit=crop&w=700&q=80";
+      vid.onplay = function() {
+        if (!userData.deposited) {
+          ensureDeposit();
+          return;
+        }
+        if (!vid.classList.contains('watched')) {
+          vid.classList.add('watched');
+          userData.videoEarnings += 5;
+          userData.earnings += 5;
+          userData.availableBalance += 5;
+          saveUserProgress(currentUser.username, userData);
+          updateEarnings();
+        }
+      };
+      gallery.appendChild(vid);
+    });
+  }
+
+  const trivias = [
+    {question: 'What is the capital of Kenya?', answer: 'Nairobi'},
+    {question: '2 + 2 = ?', answer: '4'},
+    {question: 'What color is the Kenyan flag?', answer: 'Black'},
+    {question: 'Who is the president of Kenya?', answer: 'William Ruto'},
+    {question: 'Which is the largest city in Kenya?', answer: 'Nairobi'}
+  ];
+  function loadTrivia() {
+    const container = document.getElementById('triviaQuestions');
+    container.innerHTML = '';
+    trivias.forEach((t, idx) => {
+      const div = document.createElement('div');
+      div.style.marginBottom = '8px';
+      div.innerHTML = `
+        <strong>${t.question}</strong><br>
+        <input type="text" id="triviaInput${idx}" placeholder="Your answer">
+        <button onclick="submitTrivia(${idx})" class="btn-blue-outline">Submit</button>
+        <span id="triviaResult${idx}"></span>
+      `;
+      container.appendChild(div);
+    });
+  }
+  function submitTrivia(idx) {
+    if (!userData.deposited) {
+      ensureDeposit();
+      return;
+    }
+    if (userData.triviaDone.includes(idx)) return;
+    const input = document.getElementById('triviaInput'+idx);
+    const result = document.getElementById('triviaResult'+idx);
+    if (input.value.trim().toLowerCase() === trivias[idx].answer.toLowerCase()) {
+      result.textContent = "✔ Correct! (+1 KES)";
+      result.style.color = "#36cfc9";
+      userData.triviaEarnings += 1;
+      userData.earnings += 1;
+      userData.availableBalance += 1;
+      userData.triviaDone.push(idx);
+      saveUserProgress(currentUser.username, userData);
+      updateEarnings();
+    } else {
+      result.textContent = "✘ Incorrect";
+      result.style.color = "#e53935";
+    }
+    input.disabled = true;
+  }
+
+  // Referral
+  function addReferral(level) {
+    if (!userData.deposited) {
+      ensureDeposit();
+      return;
+    }
+    if (level === 1) {
+      userData.referralsL1 += 1;
+      userData.referralEarningsL1 += 100;
+      userData.earnings += 100;
+      userData.availableBalance += 100;
+    } else if (level === 2) {
+      userData.referralsL2 += 1;
+      userData.referralEarningsL2 += 50;
+      userData.earnings += 50;
+      userData.availableBalance += 50;
+    }
+    saveUserProgress(currentUser.username, userData);
+    updateEarnings();
+  }
+
+  function updateEarnings() {
+    document.getElementById('totalEarnings').textContent = userData.earnings + " KES";
+    document.getElementById('referralEarningsL1').textContent = userData.referralEarningsL1 + " KES";
+    document.getElementById('referralEarningsL2').textContent = userData.referralEarningsL2 + " KES";
+    document.getElementById('likesEarnings').textContent = userData.photoEarnings + " KES";
+    document.getElementById('videoEarnings').textContent = userData.videoEarnings + " KES";
+    document.getElementById('triviaEarnings').textContent = userData.triviaEarnings + " KES";
+    document.getElementById('availableBalance').textContent = userData.availableBalance + " KES";
+    document.getElementById('withdrawnBalance').textContent = userData.withdrawn + " KES";
+    document.getElementById('referralEarningsL1_2').textContent = userData.referralEarningsL1 + " KES";
+    document.getElementById('referralEarningsL2_2').textContent = userData.referralEarningsL2 + " KES";
+    document.getElementById('referralCountL1').textContent = userData.referralsL1;
+    document.getElementById('referralCountL2').textContent = userData.referralsL2;
+  }
+
+  document.getElementById('withdrawalForm').onsubmit = function(e) {
+    e.preventDefault();
+    if (!userData.deposited) {
+      ensureDeposit();
+      return;
+    }
+    if (userData.referralsL1 + userData.referralsL2 < 2) {
+      document.getElementById('withdrawalMessage').textContent = "You need at least 2 referrals to withdraw.";
+      document.getElementById('withdrawalMessage').style.color = "#e53935";
+      return;
+    }
+    const amt = parseFloat(this.amount.value);
+    if (amt < 150) {
+      document.getElementById('withdrawalMessage').textContent = "Minimum withdrawal is 150 KES.";
+      document.getElementById('withdrawalMessage').style.color = "#e53935";
+      return;
+    }
+    if (amt > userData.availableBalance) {
+      document.getElementById('withdrawalMessage').textContent = "Insufficient balance.";
+      document.getElementById('withdrawalMessage').style.color = "#e53935";
+      return;
+    }
+    const fee = Math.round(amt * 0.10);
+    const finalAmt = amt - fee;
+    userData.availableBalance -= amt;
+    userData.withdrawn += finalAmt;
+    saveUserProgress(currentUser.username, userData);
+    updateEarnings();
+    document.getElementById('withdrawalMessage').textContent =
+      `Withdrawal successful! You will receive ${finalAmt} KES after 10% fee (${fee} KES).`;
+    document.getElementById('withdrawalMessage').style.color = "#36cfc9";
+    this.reset();
+  };
+
+  function loadLeaderboard() {
+    const table = document.getElementById('leaderboardTable');
+    table.innerHTML = '';
+    const accounts = getAccounts();
+    let arr = accounts.map(u => {
+      let progress = getUserProgress(u.username);
+      if (!progress) return { username: u.username, earnings: 0, referrals: 0 };
+      return {
+        username: u.username,
+        earnings: progress.earnings,
+        referrals: progress.referralsL1 + progress.referralsL2
+      };
+    });
+    arr.sort((a, b) => b.earnings - a.earnings);
+    arr.forEach((u, i) => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${i+1}</td>
+        <td>${u.username}</td>
+        <td>${u.earnings} KES</td>
+        <td>${u.referrals}</td>
+      `;
+      table.appendChild(tr);
+    });
+  }
+
+  window.onload = function() {
+    showRegister();
+    loadPhotos();
+    loadVideos();
+    loadTrivia();
+    loadLeaderboard();
+  };
+</script>
+</body>
+</html>
